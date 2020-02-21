@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import shortid from "shortid";
-import {connect} from "react-redux";
-import {recipeAddSuccess} from "../redux/recipeActions";
-
+import { connect } from "react-redux";
+import { recipeAddSuccess } from "../redux/recipeActions";
+import { Redirect } from "react-router-dom";
 const Form = styled.form`
   width: 40%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 50px 0;
 `;
 const Input = styled.input`
   margin-bottom: 10px;
@@ -51,8 +52,13 @@ const BtnAdd = styled.button`
 class RecipeAddPage extends Component {
   state = {
     recipeName: "",
-    recipeDescription: ""
+    recipeDescription: "",
+    recipeSubmitted: false
   };
+
+  componentDidMount() {
+    this.setState({ recipeSubmitted: false });
+  }
 
   handleChange = e => {
     console.log(e.target.name);
@@ -73,10 +79,15 @@ class RecipeAddPage extends Component {
       name: this.state.recipeName,
       description: this.state.recipeDescription
     };
-    this.props.recipeAddSuccess(recipe)
+    this.props.recipeAddSuccess(recipe);
+    this.setState({
+      recipeName: "",
+      recipeDescription: "",
+      recipeSubmitted: true
+    });
   };
   render() {
-    return (
+    return !this.state.recipeSubmitted ? (
       <Form onSubmit={this.handleSubmit}>
         <Input
           placeholder="Recipe name"
@@ -90,16 +101,18 @@ class RecipeAddPage extends Component {
         ></Textarea>
         <BtnAdd type="submit">add</BtnAdd>
       </Form>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }
 
 // const mapStateToProps = (state) => ({
-    
+
 // })
 
 const mapDispatchToProps = {
-    recipeAddSuccess
-}
+  recipeAddSuccess
+};
 
 export default connect(null, mapDispatchToProps)(RecipeAddPage);

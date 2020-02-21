@@ -17,6 +17,9 @@ const NavigationItem = styled(NavLink).attrs({
 color: black;
 margin-right: 20px;
 text-decoration: none;
+font-size: 22px;
+font-weight: 700;
+font-family: sans-serif;
 &.active {
     color: blue;
 }
