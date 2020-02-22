@@ -3,7 +3,7 @@ const { getRecipes, postRecipe, getRecipeById, updateRecipe } = require("./recip
 const router = express.Router();
 
 router.get("/api/recipes", getRecipes);
-router.get("/api/recipe/:id", getRecipeById)
+router.get("/api/recipes/:id", getRecipeById)
 
 router.post("/api/recipes", postRecipe);
 router.put("/api/recipes/:id", updateRecipe)

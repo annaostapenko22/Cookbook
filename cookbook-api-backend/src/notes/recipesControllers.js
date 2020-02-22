@@ -22,11 +22,9 @@ const getRecipes = (req, res, next) => {
 // !!!!!!!!!
 const getRecipeById = (req, res, next) => {
   const foundRecipe = recipes.find(r=> r.id === Number(req.params.id))
-  if (foundRecipe && foundRecipe.isActive) {
+
     res.status(200).json(foundRecipe)
-  }else {
-    res.status(404).send("Recipe does not exist")
-  }
+ 
   
 };
 
@@ -42,15 +40,25 @@ const postRecipe = (req, res, next) => {
 };
 
 // !!!!!!!!
+const oldRecipes = {}
+
 const updateRecipe = (req, res, next) => {
   const foundRecipe = recipes.find(r => r.id === Number(req.params.id));
   console.log("found", foundRecipe);
-  const recipe = {
-    ...foundRecipe,
-    ...req.body
+  if(foundRecipe) {
+    if(oldRecipes[foundRecipe.id]){
+      oldRecipes[foundRecipe.id].push(foundRecipe)
+    }else {
+      oldRecipes[foundRecipe.id] = [foundRecipe]
+    }
+
+    const recipe = {
+      ...foundRecipe,
+      ...req.body
+    }
+    res.status(201).json(recipe);
   }
 
-  res.status(201).json(recipe);
 };
 
 module.exports = { getRecipes, postRecipe, getRecipeById, updateRecipe };
