@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import shortid from "shortid";
 import { connect } from "react-redux";
-import { recipeAddSuccess } from "../redux/recipeActions";
+import {addRecipe } from "../redux/recipeOperations";
 import { Redirect } from "react-router-dom";
 const Form = styled.form`
   width: 40%;
@@ -79,7 +79,7 @@ class RecipeAddPage extends Component {
       name: this.state.recipeName,
       description: this.state.recipeDescription
     };
-    this.props.recipeAddSuccess(recipe);
+    this.props.addRecipe(recipe);
     this.setState({
       recipeName: "",
       recipeDescription: "",
@@ -112,7 +112,7 @@ class RecipeAddPage extends Component {
 // })
 
 const mapDispatchToProps = {
-  recipeAddSuccess
+  addRecipe
 };
 
 export default connect(null, mapDispatchToProps)(RecipeAddPage);

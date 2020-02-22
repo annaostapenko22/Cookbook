@@ -7,6 +7,15 @@ const initialState = {
   error: null
 };
 
+export const recipes = (state= initialState.recipesAll, action)=> {
+switch (action.type) {
+  case Type.FETCH_RECIPES_SUCCESS:
+    return action.payload;
+  default:
+    return state;
+}
+}
+
 export const recipe = (state = initialState.recipe, action) => {
   switch (action.type) {
     case Type.RECIPE_ADD_SUCCESS:
