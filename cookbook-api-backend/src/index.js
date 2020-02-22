@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(corsMiddleware());
 
-app.use("/recipes", notesRoutes);
+app.use(notesRoutes);
 
 app.listen(8080, () => {
   console.log("Server is running at port 8080");
