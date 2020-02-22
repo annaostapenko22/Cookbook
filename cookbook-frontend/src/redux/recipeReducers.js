@@ -20,6 +20,8 @@ export const recipe = (state = initialState.recipe, action) => {
   switch (action.type) {
     case Type.RECIPE_ADD_SUCCESS:
       return action.payload;
+    case Type.FETCH_ONE_RECIPE_SUCCESS:
+      return action.payload;
     default:
       return state;
   }

@@ -14,6 +14,20 @@ export const fetchAllRecipesError = (error)=> ({
     payload: error
 })
 
+export const fetchOneRecipeStart = ()=>({
+    type: Type.FETCH_ONE_RECIPE_START
+})
+
+export const fetchOneRecipeSuccess = (recipe)=>({
+    type: Type.FETCH_ONE_RECIPE_SUCCESS,
+    payload: recipe
+})
+
+export const fetchOneRecipeError = (error)=>({
+    type: Type.FETCH_ONE_RECIPE_SUCCESS,
+    payload: error
+})
+
 export const recipeAddStart = () => ({
     type: Type.RECIPE_ADD_START
 })
