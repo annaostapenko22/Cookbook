@@ -94,6 +94,8 @@ const ButtonDelete = styled(Button)`
 `;
 const ButtonOldVersionsRecipes = styled(Button)`
   margin-right: 10px;
+  width: 160px;
+  font-size: 13px;
 `;
 const List = styled.ul`
   list-style: none;
