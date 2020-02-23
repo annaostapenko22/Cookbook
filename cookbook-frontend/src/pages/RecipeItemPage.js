@@ -92,13 +92,22 @@ const ButtonDelete = styled(Button)`
     background-color: #dd1818;
   }
 `;
-
+const ButtonOldVersionsRecipes = styled(Button)`
+  margin-right: 10px;
+`;
+const List = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+`;
 class RecipeItemPage extends Component {
   state = {
     edit: false,
     name: "",
     description: "",
-    deleteSubmitted: false
+    deleteSubmitted: false,
+    areOldVersions: false
   };
 
   async componentDidMount() {
@@ -108,7 +117,8 @@ class RecipeItemPage extends Component {
       edit: false,
       name: this.props.recipe.name,
       description: this.props.recipe.description,
-      deleteSubmitted: false
+      deleteSubmitted: false,
+      areOldVersions: false
     });
   }
 
@@ -145,7 +155,7 @@ class RecipeItemPage extends Component {
 
     this.props.addOldRecipe(this.props.recipe);
     this.props.editRecipe(this.props.recipe._id, editedRecipe);
-    this.setState({ edit: false });
+    this.setState({ edit: false, areOldVersions: false });
   };
 
   handleCancel = () => {
@@ -158,11 +168,12 @@ class RecipeItemPage extends Component {
   };
 
   showRecipesOldVersions = async id => {
-   const res = await this.props.fetchOldRecipes(id);
+    const res = await this.props.fetchOldRecipes(id);
+    this.setState({ areOldVersions: true });
   };
 
   render() {
-    const { recipe} = this.props;
+    const { recipe } = this.props;
     return !this.state.deleteSubmitted ? (
       <Wrapper>
         <ButtonBack type="button" onClick={this.handleGoBackToAllRecipes}>
@@ -175,14 +186,31 @@ class RecipeItemPage extends Component {
             </InnerWrapper>
             <Text>{recipe.description}</Text>
             <InnerWrapper>
-              <button type="button" onClick={()=>this.showRecipesOldVersions(recipe._id)}>
-                show old versions
-              </button>
+              <ButtonOldVersionsRecipes
+                type="button"
+                onClick={() => this.showRecipesOldVersions(recipe._id)}
+              >
+                old versions
+              </ButtonOldVersionsRecipes>
               <ButtonEdit onClick={this.handleEditRecipe}>
                 <BorderColorIcon />
               </ButtonEdit>
               <ButtonDelete onClick={this.handleDelete}>delete</ButtonDelete>
             </InnerWrapper>
+            {this.state.areOldVersions && (
+              <List>
+                {this.props.recipes.map(recipe => (
+                  <li key={recipe._id}>
+                    <h4>{recipe.name}</h4>
+                    <p>{recipe.description}</p>
+                    <p>Created: {recipe.creationDate}</p>
+                  </li>
+                ))}
+              </List>
+            )}
+            {this.state.areOldVersions && !this.props.recipes.length && (
+              <p>No old versions yet</p>
+            )}
           </>
         )}
         {this.state.edit && (
@@ -215,7 +243,8 @@ class RecipeItemPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  recipe: state.recipe
+  recipe: state.recipe,
+  recipes: state.recipes
 });
 
 const mapDispatchToProps = {

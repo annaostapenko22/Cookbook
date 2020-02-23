@@ -29,7 +29,6 @@ const LoaderWrapper = styled.div`
 class App extends Component {
   state = {};
   render() {
-    console.log("this props loading", this.props.loading)
     return (
       <>
         <Navigation />

@@ -48,7 +48,8 @@ class RecipesAll extends Component {
       <Container>
         <Title>All recipes</Title>
         <RecipeList>
-          {this.props.recipes.length &&
+          {this.props.recipes.length ? (
+
             this.props.recipes.map(recipe => (
               <RecipeItem
                 {...recipe}
@@ -58,7 +59,9 @@ class RecipesAll extends Component {
                 }
                 handleDeleteRecipe={() => this.handleDeleteRecipe(recipe._id)}
               />
-            ))}
+            ))
+          ) : <p>No recipes yet</p>
+          }
         </RecipeList>
       </Container>
     );

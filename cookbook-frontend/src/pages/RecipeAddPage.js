@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import {addRecipe } from "../redux/operations/recipe";
+import { addRecipe } from "../redux/operations/recipe";
 import { Redirect } from "react-router-dom";
-import {Button, Input, TextArea, Form} from "../components/ui";
-
+import { Button, Input, TextArea, Form } from "../components/ui";
 
 const AddForm = styled(Form)`
   margin: 0 auto;
@@ -19,7 +18,6 @@ const AddNameInput = styled(Input)`
 const AddDescriptionTextarea = styled(TextArea)`
   margin-bottom: 10px;
 `;
-
 
 class RecipeAddPage extends Component {
   state = {
@@ -44,16 +42,18 @@ class RecipeAddPage extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const recipe = {
-      name: this.state.recipeName,
-      description: this.state.recipeDescription
-    };
-    this.props.addRecipe(recipe);
-    this.setState({
-      recipeName: "",
-      recipeDescription: "",
-      recipeSubmitted: true
-    });
+    if (this.state.recipeName && this.state.recipeDescription) {
+      const recipe = {
+        name: this.state.recipeName,
+        description: this.state.recipeDescription
+      };
+      this.props.addRecipe(recipe);
+      this.setState({
+        recipeName: "",
+        recipeDescription: "",
+        recipeSubmitted: true
+      });
+    }
   };
   render() {
     return !this.state.recipeSubmitted ? (
@@ -75,7 +75,6 @@ class RecipeAddPage extends Component {
     );
   }
 }
-
 
 const mapDispatchToProps = {
   addRecipe

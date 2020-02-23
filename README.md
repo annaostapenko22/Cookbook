@@ -10,4 +10,4 @@ This is a cookbook app where you can add, update, delete recipes
  - See the application started on localhost:3000
 
 ## Used technologies: 
-React.js, Redux, Redux Thunk, Node.js, Express, MongoDB, Mongoose, Styled-components
+React.js, Redux, Redux Thunk, Node.js, Express, MongoDB, Mongoose, Styled Components, React Router

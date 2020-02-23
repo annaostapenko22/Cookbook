@@ -73,13 +73,11 @@ export const addOldRecipe = recipe => async dispatch => {
   dispatch(oldRecipeAddStart());
   const oldRecipe = { ...recipe, refRecipeId: recipe._id };
   delete oldRecipe._id;
-  console.log("oldrecipe", oldRecipe)
   try {
     const result = await axios.post(
       "http://localhost:8080/api/recipes/old",
       oldRecipe
     );
-    console.log("RESULT HERE=>", result)
     dispatch(oldRecipeAddSuccess(result));
   } catch (err) {
     dispatch(oldRecipeAddError(err));
@@ -92,8 +90,7 @@ export const fetchOldRecipes = id => async dispatch => {
     const result = await axios.get(
       `http://localhost:8080/api/recipes/old/${id}`
     );
-    console.log("result !!!", result)
-    dispatch(fetchOldRecipesSuccess(result));
+    dispatch(fetchOldRecipesSuccess(result.data));
   } catch (err) {
     dispatch(fetchOldRecipesError(err));
   }
