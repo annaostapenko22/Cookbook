@@ -23,10 +23,12 @@ import {
   recipeDeleteError
 } from "../actions/recipe";
 
+axios.defaults.baseURL = `http://localhost:8080/api`
+
 export const fetchAllRecipes = () => async dispatch => {
   dispatch(fetchAllRecipesStart());
   try {
-    const result = await axios.get("http://localhost:8080/api/recipes");
+    const result = await axios.get(`/recipes`);
     dispatch(fetchAllRecipesSuccess(result.data));
   } catch (err) {
     dispatch(fetchAllRecipesError(err));
@@ -36,7 +38,7 @@ export const fetchAllRecipes = () => async dispatch => {
 export const fetchOneRecipe = id => async dispatch => {
   dispatch(fetchOneRecipeStart());
   try {
-    const result = await axios.get(`http://localhost:8080/api/recipes/${id}`);
+    const result = await axios.get(`/recipes/${id}`);
     dispatch(fetchOneRecipeSuccess(result.data));
   } catch (err) {
     dispatch(fetchOneRecipeError(err));
@@ -47,7 +49,7 @@ export const addRecipe = recipe => async dispatch => {
   dispatch(recipeAddStart());
   try {
     const result = await axios.post(
-      "http://localhost:8080/api/recipes",
+      `/recipes`,
       recipe
     );
     dispatch(recipeAddSuccess(result));
@@ -60,7 +62,7 @@ export const editRecipe = (id, recipe) => async dispatch => {
   dispatch(recipeEditStart());
   try {
     const result = await axios.put(
-      `http://localhost:8080/api/recipes/${id}`,
+      `/recipes/${id}`,
       recipe
     );
     dispatch(recipeEditSuccess(recipe));
@@ -75,7 +77,7 @@ export const addOldRecipe = recipe => async dispatch => {
   delete oldRecipe._id;
   try {
     const result = await axios.post(
-      "http://localhost:8080/api/recipes/old",
+      `/recipes/old`,
       oldRecipe
     );
     dispatch(oldRecipeAddSuccess(result));
@@ -88,7 +90,7 @@ export const fetchOldRecipes = id => async dispatch => {
   dispatch(fetchOldRecipesStart());
   try {
     const result = await axios.get(
-      `http://localhost:8080/api/recipes/old/${id}`
+      `/recipes/old/${id}`
     );
     dispatch(fetchOldRecipesSuccess(result.data));
   } catch (err) {
@@ -101,7 +103,7 @@ export const deleteRecipe = (id) => async dispatch => {
   
   try {
     const result = await axios.put(
-      `http://localhost:8080/api/recipes/${id}`,
+      `/recipes/${id}`,
       {isActive: false}
     );
     dispatch(recipeDeleteSuccess(result.data));
