@@ -8,7 +8,10 @@ import {
   recipeAddError,
   fetchOneRecipeStart,
   fetchOneRecipeSuccess,
-  fetchOneRecipeError
+  fetchOneRecipeError,
+  recipeEditStart,
+  recipeEditSuccess,
+  recipeEditError
 } from "./recipeActions";
 
 export const fetchAllRecipes = recipes => async dispatch => {
@@ -44,5 +47,19 @@ export const addRecipe = recipe => async dispatch => {
     console.log("ADDED", result);
   } catch (err) {
     dispatch(recipeAddError(err));
+  }
+};
+
+export const editRecipe = (id, recipe) => async dispatch => {
+  dispatch(recipeEditStart());
+  try {
+    const result = await axios.put(
+      `http://localhost:8080/api/recipes/${id}`,
+      recipe
+    );
+    dispatch(recipeEditSuccess(recipe));
+    console.log("UPDATED RECIPE",recipe);
+  } catch (err) {
+    dispatch(recipeEditError(err));
   }
 };

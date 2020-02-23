@@ -26,18 +26,7 @@ font-size: 12px;
 overflow: auto; */
 `
 
-// const RecipeItem = styled.li`
-// :hover {
-// cursor: pointer;
-// /* transform: scale(1.1); */
-// }
-// `
-const RecipeItemText = styled.p`
-:hover {
-  text-shadow: 0px 0px 6px rgba(25, 255, 255, 1);
-transition: all 0.4s ease 0s;
-}
-`
+
 class RecipeForm extends Component {
     
   state = {

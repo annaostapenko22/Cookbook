@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchOneRecipe } from "../redux/recipeOperations";
+import { fetchOneRecipe, editRecipe } from "../redux/recipeOperations";
 import { withRouter } from "react-router-dom";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import styled from "styled-components";
-
+import { Button } from "../components/ui";
 const Wrapper = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -16,7 +16,7 @@ const Title = styled.h3`
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  width: 100px;
+  width: 50px;
 `;
 const BtnEdit = styled.button`
   width: 50px;
@@ -25,6 +25,7 @@ const BtnEdit = styled.button`
   border: solid 2px #7676e3;
   padding: 5px;
   cursor: pointer;
+  font-size: 12px;
 `;
 
 const InnerWrapper = styled.div`
@@ -38,18 +39,16 @@ const BtnBack = styled.button`
   text-decoration: none;
   background: #7676e3;
   padding: 5px;
-  border-radius: 50px;
   display: inline-block;
   cursor: pointer;
   font-size: 12px;
   margin-bottom: 20px;
-  border: 1px solid #cfa0c5;
+  border: solid 3px #7676e3;
   font-weight: 700;
   outline: none;
   :hover {
-    text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
-    transition: all 0.4s ease 0s;
-    box-shadow: 0px 0px 5px 2px rgba(235, 170, 235, 1);
+    background: #fff;
+    color: #7676e3;
   }
 `;
 
@@ -60,8 +59,6 @@ const Form = styled.form`
   width: 40%;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* padding: 50px 0; */
 `;
 
 const Input = styled.input`
@@ -69,7 +66,6 @@ const Input = styled.input`
   width: 100%;
   border: solid 3px #7676e3;
   padding: 5px;
-  border-radius: 15px;
   outline: none;
 `;
 
@@ -79,7 +75,6 @@ const TextArea = styled.textarea`
   width: 100%;
   border: solid 3px #7676e3;
   padding: 5px;
-  border-radius: 20px;
   outline: none;
 `;
 
@@ -91,7 +86,6 @@ const BtnWrapper = styled.div`
 const BtnSave = styled.button`
   width: 100px;
   background-color: white;
-  border-radius: 5px;
   border: solid 2px #23c50a;
   padding: 5px;
   cursor: pointer;
@@ -99,19 +93,25 @@ const BtnSave = styled.button`
 const BtnCancel = styled.button`
   width: 100px;
   background-color: white;
-  border-radius: 5px;
   border: solid 2px #dd1818;
   padding: 5px;
   cursor: pointer;
 `;
 class RecipeItemPage extends Component {
   state = {
-    edit: false
+    edit: false,
+    name: "",
+    description: ""
   };
+
   async componentDidMount() {
-    this.setState({ edit: false });
     const id = this.props.match.params.id;
     const data = await this.props.fetchOneRecipe(id);
+    this.setState({
+      edit: false,
+      name: this.props.recipe.name,
+      description: this.props.recipe.description
+    });
   }
 
   handleGoBackToAllRecipes = () => {
@@ -121,34 +121,71 @@ class RecipeItemPage extends Component {
   handleEditRecipe = () => {
     this.setState({ edit: true });
   };
+
+  handleChangeSaveChanges = e => {
+    const name = e.target.name;
+    const description = e.target.value;
+    const editedRecipe = {
+      [name]: description
+    };
+    this.setState(state => {
+      return {
+        ...state,
+        ...editedRecipe
+      };
+    });
+  };
+
+  handleSubmitSaveChanges = e => {
+    e.preventDefault();
+    const editedRecipe = {
+      ...this.props.recipe,
+      name: this.state.name,
+      description: this.state.description
+    };
+    this.props.editRecipe(this.props.recipe.id, editedRecipe);
+    this.setState({ edit: false });
+  };
+
+  handleCancel = ()=> {
+    this.setState({edit: false})
+  }
+
   render() {
     const { recipe } = this.props;
     return (
       <Wrapper>
         <BtnBack type="button" onClick={this.handleGoBackToAllRecipes}>
-          &larr; Back to all recipes
+          &larr; Back
         </BtnBack>
         {!this.state.edit && (
           <>
             <InnerWrapper>
               <Title>{recipe.name}</Title>
-              <BtnEdit onClick={this.handleEditRecipe}>
-                <BorderColorIcon />
-              </BtnEdit>
             </InnerWrapper>
             <Text>{recipe.description}</Text>
+            <BtnEdit onClick={this.handleEditRecipe}>
+              <BorderColorIcon />
+            </BtnEdit>
           </>
         )}
         {this.state.edit && (
-          <Form>
+          <Form onSubmit={this.handleSubmitSaveChanges}>
             <div>
-              {/* <h3>{recipe.name}</h3> */}
-              <Input value={recipe.name} />
+              <Input
+                value={this.state.name}
+                onChange={this.handleChangeSaveChanges}
+                name="name"
+              />
             </div>
-            <TextArea value={recipe.description}></TextArea>
+            <TextArea
+              value={this.state.description}
+              onChange={this.handleChangeSaveChanges}
+              name="description"
+            ></TextArea>
             <BtnWrapper>
-              <BtnCancel type="button">Cancel</BtnCancel>
-              <BtnSave type="submit">save changed</BtnSave>
+              <BtnCancel type="button" onClick={this.handleCancel}>Cancel</BtnCancel>
+              <BtnSave type="submit">Save changes</BtnSave>
             </BtnWrapper>
           </Form>
         )}
@@ -162,7 +199,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  fetchOneRecipe
+  fetchOneRecipe,
+  editRecipe
 };
 
 export default withRouter(

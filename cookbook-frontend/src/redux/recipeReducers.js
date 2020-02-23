@@ -22,6 +22,8 @@ export const recipe = (state = initialState.recipe, action) => {
       return action.payload;
     case Type.FETCH_ONE_RECIPE_SUCCESS:
       return action.payload;
+    case Type.RECIPE_EDIT_SUCCESS:
+      return {...state, ...action.payload.recipe};
     default:
       return state;
   }
