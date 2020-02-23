@@ -34,7 +34,7 @@ export const TextArea = styled.textarea`
 `;
 
 export const Form = styled.form`
-  width: 40%;
+  width: 55%;
   display: flex;
   flex-direction: column;
 `;
