@@ -1,6 +1,6 @@
 # Cookbook 
 ## Description: 
-This is a cookbook app where you can add, update, delete recipes
+This is a cookbook app where you can add, update, delete recipes and check previous recipes versions
 
 ## Instruction how to launch the project:
  - Install MongoDB (https://www.mongodb.com/download-center?utm_source=manual&utm_campaign=download-mongodb-navbar-cta&utm_medium=docs)
