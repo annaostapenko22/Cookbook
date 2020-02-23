@@ -5,20 +5,20 @@ import {Button} from "../ui"
 
 
 const RecipeItem = ({
-  id,
   name,
   description,
-  history,
-  handleGoToRecipeClick
+  handleGoToRecipeClick,
+  creationDate
 }) => {
   const handleGoToRecipePageClick = () => {
     handleGoToRecipeClick();
   };
 
   return (
-    <li key={id}>
+    <li>
       <h3>{name}</h3>
       <p>{description}</p>
+      <p>Created: {creationDate} </p>
       <Button type="submit" onClick={handleGoToRecipePageClick}>
         Go to recipe
       </Button>

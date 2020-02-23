@@ -4,7 +4,7 @@ import { fetchOneRecipe, editRecipe } from "../redux/recipeOperations";
 import { withRouter } from "react-router-dom";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import styled from "styled-components";
-import { Button } from "../components/ui";
+import { Button, Input, TextArea, Form } from "../components/ui";
 const Wrapper = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -22,60 +22,32 @@ const BtnEdit = styled.button`
   width: 50px;
   background-color: white;
   border-radius: 5px;
-  border: solid 2px #7676e3;
+  border: solid 2px #ffd817;
   padding: 5px;
   cursor: pointer;
   font-size: 12px;
+  margin-right: 10px;
+  outline: none;
 `;
 
 const InnerWrapper = styled.div`
   display: flex;
 `;
-const BtnBack = styled.button`
-  width: 150px;
-  margin-bottom: 20px;
-  color: #fff;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: #7676e3;
+const BtnBack = styled(Button)`
   padding: 5px;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 12px;
   margin-bottom: 20px;
-  border: solid 3px #7676e3;
-  font-weight: 700;
-  outline: none;
-  :hover {
-    background: #fff;
-    color: #7676e3;
-  }
 `;
 
 const Text = styled.p`
   width: 50%;
 `;
-const Form = styled.form`
-  width: 40%;
-  display: flex;
-  flex-direction: column;
+
+const ItemInput = styled(Input)`
+  margin-bottom: 10px;
 `;
 
-const Input = styled.input`
+const ItemTextArea = styled(TextArea)`
   margin-bottom: 10px;
-  width: 100%;
-  border: solid 3px #7676e3;
-  padding: 5px;
-  outline: none;
-`;
-
-const TextArea = styled.textarea`
-  margin-bottom: 10px;
-  height: 200px;
-  width: 100%;
-  border: solid 3px #7676e3;
-  padding: 5px;
-  outline: none;
 `;
 
 const BtnWrapper = styled.div`
@@ -83,19 +55,31 @@ const BtnWrapper = styled.div`
   justify-content: space-around;
 `;
 
-const BtnSave = styled.button`
-  width: 100px;
+const BtnSave = styled(Button)`
   background-color: white;
   border: solid 2px #23c50a;
-  padding: 5px;
-  cursor: pointer;
-`;
-const BtnCancel = styled.button`
+  color: #23c50a;
   width: 100px;
-  background-color: white;
+  :hover {
+    background-color: #23c50a;
+  }
+`;
+const BtnCancel = styled(Button)`
+  width: 100px;
   border: solid 2px #dd1818;
-  padding: 5px;
-  cursor: pointer;
+  color: #dd1818;
+  :hover {
+    background-color: #dd1818;
+  }
+`;
+
+const BtnDelete = styled(Button)`
+  border: solid 2px #dd1818;
+  color: #dd1818;
+  width: 100px;
+  :hover {
+    background-color: #dd1818;
+  }
 `;
 class RecipeItemPage extends Component {
   state = {
@@ -143,13 +127,13 @@ class RecipeItemPage extends Component {
       name: this.state.name,
       description: this.state.description
     };
-    this.props.editRecipe(this.props.recipe.id, editedRecipe);
+    this.props.editRecipe(this.props.recipe._id, editedRecipe);
     this.setState({ edit: false });
   };
 
-  handleCancel = ()=> {
-    this.setState({edit: false})
-  }
+  handleCancel = () => {
+    this.setState({ edit: false });
+  };
 
   render() {
     const { recipe } = this.props;
@@ -164,28 +148,33 @@ class RecipeItemPage extends Component {
               <Title>{recipe.name}</Title>
             </InnerWrapper>
             <Text>{recipe.description}</Text>
-            <BtnEdit onClick={this.handleEditRecipe}>
-              <BorderColorIcon />
-            </BtnEdit>
+            <InnerWrapper>
+              <BtnEdit onClick={this.handleEditRecipe}>
+                <BorderColorIcon />
+              </BtnEdit>
+              <BtnDelete>delete</BtnDelete>
+            </InnerWrapper>
           </>
         )}
         {this.state.edit && (
           <Form onSubmit={this.handleSubmitSaveChanges}>
             <div>
-              <Input
+              <ItemInput
                 value={this.state.name}
                 onChange={this.handleChangeSaveChanges}
                 name="name"
               />
             </div>
-            <TextArea
+            <ItemTextArea
               value={this.state.description}
               onChange={this.handleChangeSaveChanges}
               name="description"
-            ></TextArea>
+            ></ItemTextArea>
             <BtnWrapper>
-              <BtnCancel type="button" onClick={this.handleCancel}>Cancel</BtnCancel>
-              <BtnSave type="submit">Save changes</BtnSave>
+              <BtnCancel type="button" onClick={this.handleCancel}>
+                Cancel
+              </BtnCancel>
+              <BtnSave type="submit">Save</BtnSave>
             </BtnWrapper>
           </Form>
         )}

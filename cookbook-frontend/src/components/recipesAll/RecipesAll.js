@@ -47,8 +47,8 @@ class RecipeForm extends Component {
       <Container>
         <Title>All recipes</Title>
         <RecipeList>
-          {this.state.recipes.map(recipe => (
-           <RecipeItem {...recipe} key={recipe.id} handleGoToRecipeClick={()=> this.handleGoToRecipeClick(recipe.id)}/>
+          {this.state.recipes.length > 0 && this.state.recipes.map(recipe => (
+           <RecipeItem {...recipe} key={recipe._id} handleGoToRecipeClick={()=> this.handleGoToRecipeClick(recipe._id)}/>
           ))}
         </RecipeList>
       </Container>

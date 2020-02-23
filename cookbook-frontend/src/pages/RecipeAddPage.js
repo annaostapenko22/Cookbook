@@ -4,29 +4,19 @@ import shortid from "shortid";
 import { connect } from "react-redux";
 import {addRecipe } from "../redux/recipeOperations";
 import { Redirect } from "react-router-dom";
-import {Button} from "../components/ui"
-const Form = styled.form`
-  width: 40%;
+import {Button, Input, TextArea, Form} from "../components/ui";
+
+
+const AddForm = styled(Form)`
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   padding: 50px 0;
 `;
-const Input = styled.input`
+const AddNameInput = styled(Input)`
   margin-bottom: 10px;
-  width: 100%;
-  border: solid 3px #7676e3;
-  padding: 5px;
-  outline: none;
 `;
-const Textarea = styled.textarea`
+const AddDescriptionTextarea = styled(TextArea)`
   margin-bottom: 10px;
-  height: 200px;
-  width: 100%;
-  border: solid 3px #7676e3;
-  padding: 5px;
-  outline: none;
 `;
 
 
@@ -69,28 +59,25 @@ class RecipeAddPage extends Component {
   };
   render() {
     return !this.state.recipeSubmitted ? (
-      <Form onSubmit={this.handleSubmit}>
-        <Input
+      <AddForm onSubmit={this.handleSubmit}>
+        <AddNameInput
           placeholder="Recipe name"
           onChange={this.handleChange}
           name="recipeName"
         />
-        <Textarea
+        <AddDescriptionTextarea
           placeholder="Write recipe description"
           onChange={this.handleChange}
           name="recipeDescription"
-        ></Textarea>
+        ></AddDescriptionTextarea>
         <Button type="submit">add</Button>
-      </Form>
+      </AddForm>
     ) : (
       <Redirect to="/" />
     );
   }
 }
 
-// const mapStateToProps = (state) => ({
-
-// })
 
 const mapDispatchToProps = {
   addRecipe

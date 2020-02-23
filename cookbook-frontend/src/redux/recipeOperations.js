@@ -19,7 +19,6 @@ export const fetchAllRecipes = recipes => async dispatch => {
   try {
     const result = await axios.get("http://localhost:8080/api/recipes");
     dispatch(fetchAllRecipesSuccess(result.data));
-    console.log("RESULT", result.data);
   } catch (err) {
     dispatch(fetchAllRecipesError(err));
   }
