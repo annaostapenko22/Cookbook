@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchOneRecipe, editRecipe } from "../redux/recipeOperations";
-import { withRouter } from "react-router-dom";
+import {
+  fetchOneRecipe,
+  editRecipe,
+  addOldRecipe,
+  fetchOldRecipes,
+  deleteRecipe
+} from "../redux/operations/recipe";
+import { withRouter, Redirect } from "react-router-dom";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import styled from "styled-components";
 import { Button, Input, TextArea, Form } from "../components/ui";
+
 const Wrapper = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -12,13 +19,15 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const Title = styled.h3`
   margin: 0;
   padding: 0;
   font-family: sans-serif;
   width: 50px;
 `;
-const BtnEdit = styled.button`
+
+const ButtonEdit = styled.button`
   width: 50px;
   background-color: white;
   border-radius: 5px;
@@ -33,7 +42,8 @@ const BtnEdit = styled.button`
 const InnerWrapper = styled.div`
   display: flex;
 `;
-const BtnBack = styled(Button)`
+
+const ButtonBack = styled(Button)`
   padding: 5px;
   margin-bottom: 20px;
 `;
@@ -50,12 +60,12 @@ const ItemTextArea = styled(TextArea)`
   margin-bottom: 10px;
 `;
 
-const BtnWrapper = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: space-around;
 `;
 
-const BtnSave = styled(Button)`
+const ButtonSave = styled(Button)`
   background-color: white;
   border: solid 2px #23c50a;
   color: #23c50a;
@@ -64,7 +74,8 @@ const BtnSave = styled(Button)`
     background-color: #23c50a;
   }
 `;
-const BtnCancel = styled(Button)`
+
+const ButtonCancel = styled(Button)`
   width: 100px;
   border: solid 2px #dd1818;
   color: #dd1818;
@@ -73,7 +84,7 @@ const BtnCancel = styled(Button)`
   }
 `;
 
-const BtnDelete = styled(Button)`
+const ButtonDelete = styled(Button)`
   border: solid 2px #dd1818;
   color: #dd1818;
   width: 100px;
@@ -81,20 +92,23 @@ const BtnDelete = styled(Button)`
     background-color: #dd1818;
   }
 `;
+
 class RecipeItemPage extends Component {
   state = {
     edit: false,
     name: "",
-    description: ""
+    description: "",
+    deleteSubmitted: false
   };
 
   async componentDidMount() {
     const id = this.props.match.params.id;
-    const data = await this.props.fetchOneRecipe(id);
+    await this.props.fetchOneRecipe(id);
     this.setState({
       edit: false,
       name: this.props.recipe.name,
-      description: this.props.recipe.description
+      description: this.props.recipe.description,
+      deleteSubmitted: false
     });
   }
 
@@ -102,6 +116,7 @@ class RecipeItemPage extends Component {
     const { history } = this.props;
     history.push("/");
   };
+
   handleEditRecipe = () => {
     this.setState({ edit: true });
   };
@@ -127,6 +142,8 @@ class RecipeItemPage extends Component {
       name: this.state.name,
       description: this.state.description
     };
+
+    this.props.addOldRecipe(this.props.recipe);
     this.props.editRecipe(this.props.recipe._id, editedRecipe);
     this.setState({ edit: false });
   };
@@ -135,13 +152,22 @@ class RecipeItemPage extends Component {
     this.setState({ edit: false });
   };
 
+  handleDelete = async () => {
+    await this.props.deleteRecipe(this.props.recipe._id);
+    this.setState({ deleteSubmitted: true });
+  };
+
+  showRecipesOldVersions = async id => {
+   const res = await this.props.fetchOldRecipes(id);
+  };
+
   render() {
-    const { recipe } = this.props;
-    return (
+    const { recipe} = this.props;
+    return !this.state.deleteSubmitted ? (
       <Wrapper>
-        <BtnBack type="button" onClick={this.handleGoBackToAllRecipes}>
+        <ButtonBack type="button" onClick={this.handleGoBackToAllRecipes}>
           &larr; Back
-        </BtnBack>
+        </ButtonBack>
         {!this.state.edit && (
           <>
             <InnerWrapper>
@@ -149,10 +175,13 @@ class RecipeItemPage extends Component {
             </InnerWrapper>
             <Text>{recipe.description}</Text>
             <InnerWrapper>
-              <BtnEdit onClick={this.handleEditRecipe}>
+              <button type="button" onClick={()=>this.showRecipesOldVersions(recipe._id)}>
+                show old versions
+              </button>
+              <ButtonEdit onClick={this.handleEditRecipe}>
                 <BorderColorIcon />
-              </BtnEdit>
-              <BtnDelete>delete</BtnDelete>
+              </ButtonEdit>
+              <ButtonDelete onClick={this.handleDelete}>delete</ButtonDelete>
             </InnerWrapper>
           </>
         )}
@@ -170,15 +199,17 @@ class RecipeItemPage extends Component {
               onChange={this.handleChangeSaveChanges}
               name="description"
             ></ItemTextArea>
-            <BtnWrapper>
-              <BtnCancel type="button" onClick={this.handleCancel}>
+            <ButtonsWrapper>
+              <ButtonCancel type="button" onClick={this.handleCancel}>
                 Cancel
-              </BtnCancel>
-              <BtnSave type="submit">Save</BtnSave>
-            </BtnWrapper>
+              </ButtonCancel>
+              <ButtonSave type="submit">Save</ButtonSave>
+            </ButtonsWrapper>
           </Form>
         )}
       </Wrapper>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }
@@ -189,7 +220,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchOneRecipe,
-  editRecipe
+  editRecipe,
+  addOldRecipe,
+  deleteRecipe,
+  fetchOldRecipes
 };
 
 export default withRouter(

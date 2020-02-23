@@ -8,7 +8,7 @@ const OldRecipeModel = require("../models/OldRecipeDbModel");
 const getRecipes = (req, res) => {
   RecipeModel.find({
     isActive: true
-  })
+  }).sort("-creationDate")
     .then(recipes => {
       res.status(200).json(recipes);
     })
@@ -39,7 +39,7 @@ const postRecipe = (req, res) => {
 
   const recipe = new RecipeModel({
     isActive: true,
-    creationDate: moment().utc(),
+    creationDate: moment().format("YYYY-MM-DD HH:mm"),
     ...req.body
   });
   recipe
@@ -82,7 +82,7 @@ const updateRecipe = (req, res) => {
 const getOldRecipes = (req, res) => {
   const recipeId = req.params.recipeId;
 
-  OldRecipeModel.findOneAndUpdate({
+  OldRecipeModel.find({
     refRecipeId: recipeId,
     isActive: true
   })
